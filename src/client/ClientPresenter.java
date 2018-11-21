@@ -10,10 +10,13 @@ import utility.HashMapUtility;
 public class ClientPresenter {
 	private ClientView view;
 	private ParallelJobsManager pManager = new ParallelJobsManager();
+	
 	private HashMap<String, Integer> server1WordCountMap = new HashMap<String, Integer>();
 	private HashMap<String, Integer> server2WordCountMap = new HashMap<String, Integer>();
+	
 	private boolean firstJobIsDone = false;
 	private boolean secondJobIsDone = false;
+	
 	static final String server1Name = "Server 1";
 	static final String server2Name = "Server 2";
 
@@ -22,10 +25,19 @@ public class ClientPresenter {
 	}
 	
 	public void present() {
+		/**
+		 * Run the multi-threading wrapper to run two processes in parallel
+		 */
 		pManager.execute(new Runnable() {
 		    @Override
 		    public void run() {
+		    	/**
+		    	 * Connect to the server with the designated port
+		    	 */
 		    	RemoteFileLineFetcher server = new RemoteFileLineFetcher(9876);
+		    	/**
+		    	 * Keep calling the next line until it's null
+		    	 */
 				String line = server.getNextLine();
 				while (line != null) {
 
@@ -38,7 +50,13 @@ public class ClientPresenter {
 		}).inParallelTo(new Runnable() {
 		    @Override
 		    public void run() {
+		    	/**
+		    	 * Connect to the server with the designated port
+		    	 */
 		    	RemoteFileLineFetcher server = new RemoteFileLineFetcher(9877);
+		    	/**
+		    	 * Keep calling the next line until it's null
+		    	 */
 				String line = server.getNextLine();
 				while (line != null) {
 					updateServer2WordsHashmapWithString(line);
@@ -50,6 +68,10 @@ public class ClientPresenter {
 	}
 	private void updateServer1WordsHashmapWithString(String line) {
 		if (line.length() > 0) {
+			/**
+	    	 * Server 1
+	    	 * Split the line to words separated by the space character and update the count to the hashap
+	    	 */
 			String[] words = line.split(" ");
 			for (int i = 0;i < words.length;i++) {
 				if (server1WordCountMap.get(words[i]) == null) {
@@ -62,6 +84,10 @@ public class ClientPresenter {
 	}
 	private void updateServer2WordsHashmapWithString(String line) {
 		if (line.length() > 0) {
+			/**
+	    	 * Server 2
+	    	 * Split the line to words separated by the space character and update the count to the hashap
+	    	 */
 			String[] words = line.split(" ");
 			for (int i = 0;i < words.length;i++) {
 				if (server2WordCountMap.get(words[i]) == null) {
@@ -79,9 +105,14 @@ public class ClientPresenter {
 
 		String[] words = sortedFilteredMap.keySet().toArray(new String[0]);
 		Integer[] wordsCount = sortedFilteredMap.values().toArray(new Integer[0]);
+		/**
+    	 * Server 1
+    	 * Call the view handler with the final data
+    	 */
 		view.topWordsFetched(server1Name, words, wordsCount);
 		
 		if (secondJobIsDone) {
+			//If the other file is done close the thread
 			concludeAll();
 		}
 	}
@@ -92,9 +123,15 @@ public class ClientPresenter {
 
 		String[] words = sortedFilteredMap.keySet().toArray(new String[0]);
 		Integer[] wordsCount = sortedFilteredMap.values().toArray(new Integer[0]);
+		
+		/**
+    	 * Sever 2
+    	 * Call the view handler with the final data
+    	 */
 		view.topWordsFetched(server2Name, words, wordsCount);
 		
 		if (firstJobIsDone) {
+			//If the other file is done close the thread
 			concludeAll();
 		}
 	}

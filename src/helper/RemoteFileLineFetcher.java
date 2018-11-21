@@ -12,10 +12,12 @@ import utility.Constant;
 public class RemoteFileLineFetcher {
 	public int port;
 	public InetAddress host;
-	public boolean debugMode = false;
 	Socket socket;
 	ObjectOutputStream oos;
     ObjectInputStream ois;
+
+    //For unit testing
+	public boolean debugMode = false;
 	
 	public RemoteFileLineFetcher(Integer port) {
 		try {
@@ -23,17 +25,19 @@ public class RemoteFileLineFetcher {
 		} catch (UnknownHostException e) {
 
 			System.out.println("Error occured, couldn't get device IP.");
-//			System.out.println(e);
 			System.exit(0);
 		}
 		this.port = port;
 	}
+	
+	/**
+	 * Open a socket and get the next line
+	 */
 	public String getNextLine() {
 		if (debugMode == true) {
 			return getMockNextLine();
 		}else {
 			String message = "";
-//	        while (message.equals(Constant.socketCloseMagicWord) == false) {
 				try {
 		            //establish socket connection to server
 					socket = new Socket(host.getHostName(), port);
@@ -45,12 +49,17 @@ public class RemoteFileLineFetcher {
 		            //read the server response message
 		            ois = new ObjectInputStream(socket.getInputStream());
 		            message = (String) ois.readObject();
+		            
 		            //close resources
 		            ois.close();
 		            oos.close();
+		            
+		            //Just catch your breath
 		            Thread.sleep(100);
 				} catch (UnknownHostException e) {
-
+					/**
+					 * We don't want to bother end user with programming errors
+					 */
 					System.out.println("An error occured while connecting to the server.");
 //					e.printStackTrace();
 					return null;
@@ -75,10 +84,12 @@ public class RemoteFileLineFetcher {
 
 				}
 				return message;
-//	        }
 		}
 	}
 	private String getMockNextLine() {
+		/**
+		 * For the unit test
+		 */
 		return Constant.socketCloseMagicWord;
 	}
 }

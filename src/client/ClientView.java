@@ -3,16 +3,18 @@ package client;
 public class ClientView {
 	 
 	public ClientView() {
+		/**
+		 * Delegate the presenter to do all the testable logic stuff
+		 */
 		ClientPresenter presenter = new ClientPresenter(this);
 		presenter.present();
-		
-		/*String[] words = {"a", "b", "c", "d", "e"};
-		Integer[] wordsCount = {1, 2, 3, 4, 5};
-		
-		this.topWordsFetched("Server1", words, wordsCount);*/
 	}
 	
+	/**
+	 * Return the cooked data for the view to display
+	 */
 	public void topWordsFetched(String serverName, String[] words, Integer[] wordsCount) {
+		
 		if (words.length == 0) {
 		    System.out.println("Couldn't fetch any words from "+serverName);
 		}else {

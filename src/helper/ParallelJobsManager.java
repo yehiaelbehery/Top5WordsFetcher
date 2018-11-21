@@ -13,7 +13,10 @@ public class ParallelJobsManager {
 
 		executor = Executors.newFixedThreadPool(2);
 	}
-
+	
+	/**
+	 * Thread 1 code
+	 */
 	public ParallelJobsManager execute(Runnable executionHandler) {
 		
     	executor.submit(() -> {
@@ -21,6 +24,10 @@ public class ParallelJobsManager {
     	});
 		return this;
 	}
+	
+	/**
+	 * Thread 2 code
+	 */
 	public ParallelJobsManager inParallelTo(Runnable inParallelHandler) {
 		
 
@@ -31,6 +38,9 @@ public class ParallelJobsManager {
 		return this;
 	}
 	
+	/**
+	 * Shutdown the executer
+	 */
 	public void stop() {
 		try {
     	    System.out.println("attempt to shutdown executor");

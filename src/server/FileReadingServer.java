@@ -15,7 +15,6 @@ import utility.Constant;
 
 public class FileReadingServer {
 
-    //static ServerSocket variable
     private ServerSocket server;
     
     public FileReadingServer (String serverName, Integer port, String fileName) {
@@ -24,11 +23,14 @@ public class FileReadingServer {
         BufferedReader reader;
     	
 			try {
+				//Read the file
 				reader = new BufferedReader(
 				     new InputStreamReader(
 				     new FileInputStream(System.getProperty("user.dir")+"/"+fileName), "ISO-8859-1"));
+				
 		        //create the socket server object
 		        server = new ServerSocket(port);
+		        
         //keep listens indefinitely until receives 'exit' call or program terminates
         while(true){
             System.out.println(serverName+" waiting for client request");
@@ -51,17 +53,21 @@ public class FileReadingServer {
 
             if (line == null) {
 
+            	//Send socket closing message to the client
             	oos.writeObject(Constant.socketCloseMagicWord);
+            	
                 //close resources
                 ois.close();
                 oos.close();
                 socket.close();
             	break;
             }else {
+            	//Send the next line
             	oos.writeObject(line);
         	}
         }
         System.out.println(serverName+" shutting down Socket server!!");
+        
         //close the ServerSocket object
         reader.close();
         server.close();
