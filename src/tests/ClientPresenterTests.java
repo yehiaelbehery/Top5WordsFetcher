@@ -41,17 +41,58 @@ class ClientPresenterTests {
 	
 
 	@Test
-	void test_updateWordsHashmapWithString() {
+	void test_updateServer1WordsHashmapWithString() {
 		ClientView view = new ClientView();
 		ClientPresenter presenter = new ClientPresenter(view);
 		
 		try {
-			Method method = presenter.getClass().getDeclaredMethod("updateWordsHashmapWithString", String.class);
+			Method method = presenter.getClass().getDeclaredMethod("updateServer1WordsHashmapWithString", String.class);
 			method.setAccessible(true);
 			@SuppressWarnings("unused")
 			Object r = method.invoke(presenter, "one two two four");
 
-			Field field = presenter.getClass().getDeclaredField("wordCountMap");
+			Field field = presenter.getClass().getDeclaredField("server1WordCountMap");
+			field.setAccessible(true);
+			HashMap<String, Integer> wordCountMap = (HashMap<String, Integer>) field.get(presenter);
+
+			assertTrue(wordCountMap.get("one") == 1);
+			assertTrue(wordCountMap.get("two") == 2);
+			assertTrue(wordCountMap.get("four") == 1);
+			
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+
+			fail(e.toString());
+			
+		} catch (SecurityException e) {
+		
+			fail(e.toString());
+			
+		} catch (NoSuchMethodException e) {
+
+			fail(e.toString());
+			
+		} catch (InvocationTargetException e) {
+
+			fail(e.toString());
+			
+		} catch (NoSuchFieldException e) {
+
+			fail(e.toString());
+			
+		}
+	}
+	@Test
+	void test_updateServer2WordsHashmapWithString() {
+		ClientView view = new ClientView();
+		ClientPresenter presenter = new ClientPresenter(view);
+		
+		try {
+			Method method = presenter.getClass().getDeclaredMethod("updateServer2WordsHashmapWithString", String.class);
+			method.setAccessible(true);
+			@SuppressWarnings("unused")
+			Object r = method.invoke(presenter, "one two two four");
+
+			Field field = presenter.getClass().getDeclaredField("server2WordCountMap");
 			field.setAccessible(true);
 			HashMap<String, Integer> wordCountMap = (HashMap<String, Integer>) field.get(presenter);
 

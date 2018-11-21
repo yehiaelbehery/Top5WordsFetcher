@@ -38,16 +38,16 @@ class HashMapUtilityTests {
 
 		Map<String, Integer> map = new HashMap<String, Integer>();
         
-		map.put("b", 5);
-		map.put("a", 6);
-		map.put("z", 10);
-		map.put("z", 10);
+		map.put("a", 5);
+		map.put("d", 6);
 		
 		Map<String, Integer> filteredMap = HashMapUtility.getTheFirst(2, map);
 		
 		Set<String> filteredMapKeys = filteredMap.keySet();
 		Iterator<String> it = filteredMapKeys.iterator();
+		it.next();
 		it.remove();
+		it.next();
 		it.remove();
 		assertFalse(it.hasNext());
 

@@ -23,7 +23,7 @@ This is a small project written in Java implementing a client connecting in para
  - Right-click one src > server > Server1.java, choose "Run As" > "Java Application". The console will print "Server 1 waiting for client request".
  - Repeat for src > server > Server2.java to get output > "Server 2 waiting for client request".
  - Repeat for src > client > MainClass.java.
- - What the magic happen.
+ - What the magic unfold.
  
  2- Run from jar files:
   - Run server1.jar, server2.jar then client.jar.
