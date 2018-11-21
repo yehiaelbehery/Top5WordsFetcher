@@ -31,7 +31,7 @@ public class FileReadingServer {
 		        //create the socket server object
 		        server = new ServerSocket(port);
 		        
-        //keep listens indefinitely until receives 'exit' call or program terminates
+        //keep listening indefinitely until the file lines run out
         while(true){
             System.out.println(serverName+" waiting for client request");
             

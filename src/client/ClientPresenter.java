@@ -26,7 +26,7 @@ public class ClientPresenter {
 	
 	public void present() {
 		/**
-		 * Run the multi-threading wrapper to run two processes in parallel
+		 * Run the multithreading wrapper to run two processes in parallel
 		 */
 		pManager.execute(new Runnable() {
 		    @Override
@@ -70,7 +70,7 @@ public class ClientPresenter {
 		if (line.length() > 0) {
 			/**
 	    	 * Server 1
-	    	 * Split the line to words separated by the space character and update the count to the hashap
+	    	 * Split the line to words separated by the space character and update the count to the hashmap
 	    	 */
 			String[] words = line.split(" ");
 			for (int i = 0;i < words.length;i++) {
@@ -112,7 +112,7 @@ public class ClientPresenter {
 		view.topWordsFetched(server1Name, words, wordsCount);
 		
 		if (secondJobIsDone) {
-			//If the other file is done close the thread
+			//If the other file is done close the thread manager
 			concludeAll();
 		}
 	}
@@ -131,7 +131,7 @@ public class ClientPresenter {
 		view.topWordsFetched(server2Name, words, wordsCount);
 		
 		if (firstJobIsDone) {
-			//If the other file is done close the thread
+			//If the other file is done close the thread manager
 			concludeAll();
 		}
 	}

@@ -39,27 +39,24 @@ public class RemoteFileLineFetcher {
 		}else {
 			String message = "";
 				try {
-		            //establish socket connection to server
+		            //Establish socket connection to server
 					socket = new Socket(host.getHostName(), port);
 					
-		            //write to socket using ObjectOutputStream
+		            //Write to socket using ObjectOutputStream
 		            oos = new ObjectOutputStream(socket.getOutputStream());
 		            oos.writeObject("next");
 		            
-		            //read the server response message
+		            //Read the server response message
 		            ois = new ObjectInputStream(socket.getInputStream());
 		            message = (String) ois.readObject();
 		            
-		            //close resources
+		            //Close resources
 		            ois.close();
 		            oos.close();
 		            
 		            //Just catch your breath
 		            Thread.sleep(100);
 				} catch (UnknownHostException e) {
-					/**
-					 * We don't want to bother end user with programming errors
-					 */
 					System.out.println("An error occured while connecting to the server.");
 //					e.printStackTrace();
 					return null;
