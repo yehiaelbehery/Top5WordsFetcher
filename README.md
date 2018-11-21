@@ -4,10 +4,10 @@ This is a small project written in Java implementing a client connecting in para
 
 
 ## App archicture
-- Client
+## Client
 ![Alt text](client.jpeg)
 
-- Server
+## Server
 ![Alt text](server.jpeg)
 
 ### Prerequisites
