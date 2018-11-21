@@ -5,7 +5,7 @@ This is a small project written in Java implementing a client connecting in para
 
 ## App archicture
 ## Client
-![Alt text](client.jpeg)
+![Alt text](clien2.jpeg)
 
 ## Server
 ![Alt text](server.jpeg)
