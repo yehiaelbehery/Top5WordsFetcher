@@ -11,8 +11,9 @@ public class ClientPresenter {
 	private ClientView view;
 	private ParallelJobsManager pManager = new ParallelJobsManager();
 	
-	private HashMap<String, Integer> server1WordCountMap = new HashMap<String, Integer>();
-	private HashMap<String, Integer> server2WordCountMap = new HashMap<String, Integer>();
+//	private HashMap<String, Integer> server1WordCountMap = new HashMap<String, Integer>();
+//	private HashMap<String, Integer> server2WordCountMap = new HashMap<String, Integer>();
+	private HashMap<String, Integer> wordCountMap = new HashMap<String, Integer>();
 	
 	private boolean firstJobIsDone = false;
 	private boolean secondJobIsDone = false;
@@ -41,7 +42,8 @@ public class ClientPresenter {
 				String line = server.getNextLine();
 				while (line != null) {
 
-					updateServer1WordsHashmapWithString(line);
+//					updateServer1WordsHashmapWithString(line);
+					updateWordsHashmapWithString(line);
 					line = server.getNextLine();
 				}
 				concludeFirstJob();
@@ -59,19 +61,20 @@ public class ClientPresenter {
 		    	 */
 				String line = server.getNextLine();
 				while (line != null) {
-					updateServer2WordsHashmapWithString(line);
+//					updateServer2WordsHashmapWithString(line);
+					updateWordsHashmapWithString(line);
 					line = server.getNextLine();
 				}
 				concludeSecondJob();
 		    }
 		});
 	}
-	private void updateServer1WordsHashmapWithString(String line) {
+	/*private void updateServer1WordsHashmapWithString(String line) {
 		if (line.length() > 0) {
-			/**
-	    	 * Server 1
-	    	 * Split the line to words separated by the space character and update the count to the hashmap
-	    	 */
+			
+	    	  Server 1
+	    	  Split the line to words separated by the space character and update the count to the hashmap
+	    	 
 			String[] words = line.split(" ");
 			for (int i = 0;i < words.length;i++) {
 				if (server1WordCountMap.get(words[i]) == null) {
@@ -84,10 +87,10 @@ public class ClientPresenter {
 	}
 	private void updateServer2WordsHashmapWithString(String line) {
 		if (line.length() > 0) {
-			/**
-	    	 * Server 2
-	    	 * Split the line to words separated by the space character and update the count to the hashap
-	    	 */
+			
+	    	  Server 2
+	    	  Split the line to words separated by the space character and update the count to the hashap
+	    	 
 			String[] words = line.split(" ");
 			for (int i = 0;i < words.length;i++) {
 				if (server2WordCountMap.get(words[i]) == null) {
@@ -97,19 +100,37 @@ public class ClientPresenter {
 				}
 			}
 		}
+	}*/
+	private void updateWordsHashmapWithString(String line) {
+		if (line.length() > 0) {
+			/**
+	    	*  Server 1 & 2 concurrently
+	    	*  Split the line to words separated by the space character and update the count to the hashap
+	    	*/ 
+			String[] words = line.split(" ");
+			for (int i = 0;i < words.length;i++) {
+				synchronized (this) {
+					if (wordCountMap.get(words[i]) == null) {
+						wordCountMap.put(words[i], 1);
+					}else {
+						wordCountMap.put(words[i], (int)wordCountMap.get(words[i])+1 );
+					}
+				}
+			}
+		}
 	}
 	private void concludeFirstJob() {
 		firstJobIsDone = true;
 
-		Map<String, Integer> sortedFilteredMap = HashMapUtility.getTheFirst(5, HashMapUtility.sortByValueDesc(server1WordCountMap));
+		/*Map<String, Integer> sortedFilteredMap = HashMapUtility.getTheFirst(5, HashMapUtility.sortByValueDesc(server1WordCountMap));
 
 		String[] words = sortedFilteredMap.keySet().toArray(new String[0]);
-		Integer[] wordsCount = sortedFilteredMap.values().toArray(new Integer[0]);
+		Integer[] wordsCount = sortedFilteredMap.values().toArray(new Integer[0]);*/
 		/**
     	 * Server 1
     	 * Call the view handler with the final data
     	 */
-		view.topWordsFetched(server1Name, words, wordsCount);
+//		view.topWordsFetched(server1Name, words, wordsCount);
 		
 		if (secondJobIsDone) {
 			//If the other file is done close the thread manager
@@ -119,16 +140,16 @@ public class ClientPresenter {
 	private void concludeSecondJob() {
 		secondJobIsDone = true;
 		
-		Map<String, Integer> sortedFilteredMap = HashMapUtility.getTheFirst(5, HashMapUtility.sortByValueDesc(server2WordCountMap));
+		/*Map<String, Integer> sortedFilteredMap = HashMapUtility.getTheFirst(5, HashMapUtility.sortByValueDesc(server2WordCountMap));
 
 		String[] words = sortedFilteredMap.keySet().toArray(new String[0]);
-		Integer[] wordsCount = sortedFilteredMap.values().toArray(new Integer[0]);
+		Integer[] wordsCount = sortedFilteredMap.values().toArray(new Integer[0]);*/
 		
 		/**
     	 * Sever 2
     	 * Call the view handler with the final data
     	 */
-		view.topWordsFetched(server2Name, words, wordsCount);
+//		view.topWordsFetched(server2Name, words, wordsCount);
 		
 		if (firstJobIsDone) {
 			//If the other file is done close the thread manager
@@ -137,5 +158,16 @@ public class ClientPresenter {
 	}
 	private void concludeAll() {
 		pManager.stop();
+		
+		Map<String, Integer> sortedFilteredMap = HashMapUtility.getTheFirst(5, HashMapUtility.sortByValueDesc(wordCountMap));
+
+		String[] words = sortedFilteredMap.keySet().toArray(new String[5]);
+		Integer[] wordsCount = sortedFilteredMap.values().toArray(new Integer[5]);
+		
+		/**
+		 * 
+    	 * Call the view handler with the final data
+    	 */
+		view.topWordsFetched(words, wordsCount);
 	}
 }

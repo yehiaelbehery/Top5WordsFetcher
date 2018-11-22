@@ -57,25 +57,21 @@ public class RemoteFileLineFetcher {
 		            //Just catch your breath
 		            Thread.sleep(100);
 				} catch (UnknownHostException e) {
-					System.out.println("An error occured while connecting to the server.");
 //					e.printStackTrace();
 					return null;
 							
 				} catch (IOException e) {
 
-					System.out.println("An error occured while connecting to the server.");
 //					e.printStackTrace();
 					return null;
 					
 				} catch (ClassNotFoundException e) {
 
-					System.out.println("An error occured while connecting to the server.");
 //					e.printStackTrace();
 					return null;
 
 				} catch (InterruptedException e) {
 
-					System.out.println("An error occured while connecting to the server.");
 //					e.printStackTrace();
 					return null;
 

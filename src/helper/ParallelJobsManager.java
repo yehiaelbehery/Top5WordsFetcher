@@ -43,7 +43,7 @@ public class ParallelJobsManager {
 	 */
 	public void stop() {
 		try {
-    	    System.out.println("attempt to shutdown executor");
+//    	    System.out.println("attempt to shutdown executor");
     	    executor.shutdown();
     	    executor.awaitTermination(5, TimeUnit.SECONDS);
     	}
@@ -55,7 +55,7 @@ public class ParallelJobsManager {
 //    	        System.err.println("cancel non-finished tasks");
     	    }
     	    executor.shutdownNow();
-    	    System.out.println("shutdown finished");
+//    	    System.out.println("shutdown finished");
     	}
 	}
 }
