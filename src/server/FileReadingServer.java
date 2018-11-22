@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 import utility.Constant;
 
@@ -73,19 +74,29 @@ public class FileReadingServer {
         server.close();
         
 		} catch (UnsupportedEncodingException e) {
-			System.out.println(e.toString());
+			displayError("Error opening file, please, make sure the file is ISO-8859-1 formatted.", e.toString());
 			System.exit(0);
 		} catch (FileNotFoundException e) {
-			System.out.println("File "+fileName+" not found. Please make sure it exists in ("+System.getProperty("user.dir")+")");
+			displayError("File "+fileName+" not found. Please make sure it exists in ("+System.getProperty("user.dir")+").", e.toString());
 			System.exit(0);
 		} catch (IOException e) {
-
-			System.out.println(e.toString());
+			displayError("Error reading file, Pleae try again later.", e.toString());
 			System.exit(0);
 		} catch (ClassNotFoundException e) {
-
+			displayError("An error occurred, Pleae try again later.", e.toString());
 			System.out.println(e.toString());
 			System.exit(0);
 		}
+    }
+    private void displayError(String error, String details) {
+    	System.out.println(error);
+    	promptForMoreDetails(details);
+    }
+    private void promptForMoreDetails(String details) {
+    	System.out.println("Type anything for more details...");
+	    Scanner scan = new Scanner(System.in);
+	    scan.nextLine();
+	    System.err.println(details);
+	    scan.close();
     }
 }

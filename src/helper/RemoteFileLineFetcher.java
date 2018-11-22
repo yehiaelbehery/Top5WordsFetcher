@@ -15,6 +15,10 @@ public class RemoteFileLineFetcher {
 	Socket socket;
 	ObjectOutputStream oos;
     ObjectInputStream ois;
+    
+    public boolean encounteredAnError = false;
+    public String errorMessage;
+    public String errorDetails;
 
     //For unit testing
 	public boolean debugMode = false;
@@ -24,8 +28,7 @@ public class RemoteFileLineFetcher {
 			host = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
 
-			System.out.println("Error occured, couldn't get device IP.");
-			System.exit(0);
+			logError("Error occured, couldn't get device IP.", e.toString());
 		}
 		this.port = port;
 	}
@@ -49,32 +52,22 @@ public class RemoteFileLineFetcher {
 		            //Read the server response message
 		            ois = new ObjectInputStream(socket.getInputStream());
 		            message = (String) ois.readObject();
-		            
+		            if (message.equals(Constant.socketCloseMagicWord)) {
+		            	return null;
+		            }
 		            //Close resources
 		            ois.close();
 		            oos.close();
 		            
-		            //Just catch your breath
+		            //Catch your breath
 		            Thread.sleep(100);
-				} catch (UnknownHostException e) {
-//					e.printStackTrace();
-					return null;
-							
-				} catch (IOException e) {
+				} catch (IOException | ClassNotFoundException e) {
 
-//					e.printStackTrace();
-					return null;
-					
-				} catch (ClassNotFoundException e) {
-
-//					e.printStackTrace();
+					logError("Error reading from the server, please try again later.", e.toString());
 					return null;
 
 				} catch (InterruptedException e) {
-
-//					e.printStackTrace();
-					return null;
-
+					//do nothing
 				}
 				return message;
 		}
@@ -84,5 +77,10 @@ public class RemoteFileLineFetcher {
 		 * For the unit test
 		 */
 		return Constant.socketCloseMagicWord;
+	}
+	private void logError(String error, String details) {
+		encounteredAnError = true;
+		this.errorMessage = error;
+		this.errorDetails = details;
 	}
 }
