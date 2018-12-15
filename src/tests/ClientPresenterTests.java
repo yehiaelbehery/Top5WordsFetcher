@@ -40,6 +40,7 @@ class ClientPresenterTests {
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	@Test
 	void test_updateWordsHashmapWithString() {
 		ClientView view = new ClientView();
