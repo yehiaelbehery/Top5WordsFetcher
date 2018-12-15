@@ -1,5 +1,5 @@
 package utility;
 
 public class Constant {
-	static public String socketCloseMagicWord = "Done";
+	static public String socketCloseMagicWord = null;
 }
